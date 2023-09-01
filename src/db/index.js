@@ -1,32 +1,42 @@
-import dotenv from "dotenv";
-import express from "express";
-dotenv.config();
+import pkg from "pg";
+const { Pool } = pkg;
 
-const app = express();
-const port = 3000;
-
-app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.json({
-    message: "API para CRUD usuario: link_gitgub",
+async function connect() {
+  const pool = new Pool({
+    connectionString: process.env.URL_BD,
   });
-});
-
-app.listen(port, () => {
-  // Um socket para "escutar" as requisições
-  console.log(`Serviço escutando na porta:  ${port}`);
-});
-//src/routes/usuario.js
-const router = Router();
-
-router.get("/usuario", async (req, res) => {
-  console.log(`Rota GET /usuarios solicitada pelo usuario ${req.userId}`);
-  try {
-    const usuarios = await selectUsuarios();
-    res.json(usuarios);
-  } catch (error) {
-    res.status(error.status || 500).json({ message: error.message || "Erro!" });
-  }
-});
-export default router;
+  return pool.connect();
+}
+async function selectUsuarios() {
+  const client = await connect();
+  const res = await client.query("SELECT * FROM usuario");
+  return res.rows;
+}
+async function selectUsuario() {
+  const client = await connect();
+  const res = await client.query("SELECT * FROM usuario");
+  return res.rows;
+}
+async function insertUsuario() {
+  const client = await connect();
+  const res = await client.query("SELECT * FROM usuario");
+  return res.rows;
+}
+async function deleteUsuario() {
+  const client = await connect();
+  const res = await client.query("SELECT * FROM usuario");
+  return res.rows;
+}
+async function updateUsuario() {
+  const client = await connect();
+  const res = await client.query("SELECT * FROM usuario");
+  return res.rows;
+}
+async function autenticarUsuario(email, senha) {
+  const client = await connect();
+  const query = "SELECT * FROM usuario WHERE email = $1 AND senha = $2";
+  const usuario = [email, senha];
+  const res = await client.query(query, usuario);
+  return res.rows[0];
+}
+export { selectUsuarios, selectUsuario, insertUsuario, deleteUsuario, updateUsuario, autenticarUsuario };
