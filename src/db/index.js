@@ -14,7 +14,9 @@ async function selectUsuarios() {
 }
 async function selectUsuario() {
   const client = await connect();
-  const res = await client.query("SELECT * FROM usuario");
+  const query = "SELECT * FROM usuario WHERE id = $1";
+  const usuario = [id];
+  const res = await client.query(query, usuario);
   return res.rows;
 }
 async function insertUsuario() {
